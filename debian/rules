@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+export GOPATH=$(CURDIR)/_build
+export DEB_LDFLAGS_SET=
+
+%:
+	dh $@ --buildsystem=golang --builddirectory=_build
+
+override_dh_auto_clean:
+	rm -rf $(CURDIR)/_build $(CURDIR)/dist
+	make clean
+
+override_dh_auto_build:
+	make build-local
+	make cli-local
+
+override_dh_auto_test:
+
+override_dh_dwz:
+
+override_dh_auto_install:
+	install -p -m 0644 $(CURDIR)/debian/argocd.png $(CURDIR)/debian/argo-cd/usr/share/pixmaps
+	install -p -m 0755 $(CURDIR)/dist/argocd $(CURDIR)/debian/argo-cd/usr/bin
+	$(CURDIR)/debian/argo-cd/usr/bin/argocd completion bash > $(CURDIR)/debian/argo-cd/usr/share/bash-completion/completions/argocd
+	$(CURDIR)/debian/argo-cd/usr/bin/argocd completion zsh > $(CURDIR)/debian/argo-cd/usr/share/zsh/vendor-completions/_argocd

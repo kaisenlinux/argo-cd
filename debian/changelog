@@ -1,0 +1,5 @@
+argo-cd (2.10.0-1kaisen) kaisen-packages; urgency=medium
+
+  * Initial release
+
+ -- Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>  Thu, 08 Feb 2024 22:19:47 +0100

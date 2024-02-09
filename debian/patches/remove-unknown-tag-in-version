@@ -1,0 +1,13 @@
+Author: Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>
+
+--- argo-cd-2.10.0.orig/common/version.go
++++ argo-cd-2.10.0/common/version.go
+@@ -65,7 +65,7 @@ func GetVersion() Version {
+ 				versionStr += ".dirty"
+ 			}
+ 		} else {
+-			versionStr += "+unknown"
++			versionStr += ""
+ 		}
+ 	}
+ 

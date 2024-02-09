@@ -1,0 +1,13 @@
+Author: Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>
+
+--- argo-cd-2.10.0.orig/Makefile
++++ argo-cd-2.10.0/Makefile
+@@ -146,8 +146,6 @@ ARGOCD_E2E_APISERVER_PORT?=8080
+ override LDFLAGS += \
+   -X ${PACKAGE}.version=${VERSION} \
+   -X ${PACKAGE}.buildDate=${BUILD_DATE} \
+-  -X ${PACKAGE}.gitCommit=${GIT_COMMIT} \
+-  -X ${PACKAGE}.gitTreeState=${GIT_TREE_STATE}\
+   -X ${PACKAGE}.kubectlVersion=${KUBECTL_VERSION}\
+   -X "${PACKAGE}.extraBuildInfo=${EXTRA_BUILD_INFO}"
+ 

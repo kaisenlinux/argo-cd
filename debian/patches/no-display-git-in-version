@@ -1,0 +1,32 @@
+Author: Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>
+
+--- argo-cd-2.10.0.orig/cmd/argocd/commands/version.go
++++ argo-cd-2.10.0/cmd/argocd/commands/version.go
+@@ -108,11 +108,6 @@ func printClientVersion(version *common.
+ 		return output
+ 	}
+ 	output += fmt.Sprintf("  BuildDate: %s\n", version.BuildDate)
+-	output += fmt.Sprintf("  GitCommit: %s\n", version.GitCommit)
+-	output += fmt.Sprintf("  GitTreeState: %s\n", version.GitTreeState)
+-	if version.GitTag != "" {
+-		output += fmt.Sprintf("  GitTag: %s\n", version.GitTag)
+-	}
+ 	output += fmt.Sprintf("  GoVersion: %s\n", version.GoVersion)
+ 	output += fmt.Sprintf("  Compiler: %s\n", version.Compiler)
+ 	output += fmt.Sprintf("  Platform: %s\n", version.Platform)
+@@ -132,15 +127,6 @@ func printServerVersion(version *version
+ 	if version.BuildDate != "" {
+ 		output += fmt.Sprintf("  BuildDate: %s\n", version.BuildDate)
+ 	}
+-	if version.GitCommit != "" {
+-		output += fmt.Sprintf("  GitCommit: %s\n", version.GitCommit)
+-	}
+-	if version.GitTreeState != "" {
+-		output += fmt.Sprintf("  GitTreeState: %s\n", version.GitTreeState)
+-	}
+-	if version.GitTag != "" {
+-		output += fmt.Sprintf("  GitTag: %s\n", version.GitTag)
+-	}
+ 	if version.GoVersion != "" {
+ 		output += fmt.Sprintf("  GoVersion: %s\n", version.GoVersion)
+ 	}
