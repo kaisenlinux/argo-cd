@@ -107,6 +107,7 @@ type RepoServerInitConstants struct {
 	StreamedManifestMaxExtractedSize             int64
 	StreamedManifestMaxTarSize                   int64
 	HelmManifestMaxExtractedSize                 int64
+	HelmRegistryMaxIndexSize                     int64
 	DisableHelmManifestMaxExtractedSize          bool
 }
 
@@ -1389,7 +1390,7 @@ func GenerateManifests(ctx context.Context, appPath, repoRoot, revision string, 
 		if q.KustomizeOptions != nil {
 			kustomizeBinary = q.KustomizeOptions.BinaryPath
 		}
-		k := kustomize.NewKustomizeApp(appPath, q.Repo.GetGitCreds(gitCredsStore), repoURL, kustomizeBinary)
+		k := kustomize.NewKustomizeApp(repoRoot, appPath, q.Repo.GetGitCreds(gitCredsStore), repoURL, kustomizeBinary)
 		targetObjs, _, err = k.Build(q.ApplicationSource.Kustomize, q.KustomizeOptions, env)
 	case v1alpha1.ApplicationSourceTypePlugin:
 		pluginName := ""
@@ -1976,7 +1977,7 @@ func (s *Service) GetAppDetails(ctx context.Context, q *apiclient.RepoServerAppD
 				return err
 			}
 		case v1alpha1.ApplicationSourceTypeKustomize:
-			if err := populateKustomizeAppDetails(res, q, opContext.appPath, commitSHA, s.gitCredsStore); err != nil {
+			if err := populateKustomizeAppDetails(res, q, repoRoot, opContext.appPath, commitSHA, s.gitCredsStore); err != nil {
 				return err
 			}
 		case v1alpha1.ApplicationSourceTypePlugin:
@@ -2117,13 +2118,13 @@ func walkHelmValueFilesInPath(root string, valueFiles *[]string) filepath.WalkFu
 	}
 }
 
-func populateKustomizeAppDetails(res *apiclient.RepoAppDetailsResponse, q *apiclient.RepoServerAppDetailsQuery, appPath string, reversion string, credsStore git.CredsStore) error {
+func populateKustomizeAppDetails(res *apiclient.RepoAppDetailsResponse, q *apiclient.RepoServerAppDetailsQuery, repoRoot string, appPath string, reversion string, credsStore git.CredsStore) error {
 	res.Kustomize = &apiclient.KustomizeAppSpec{}
 	kustomizeBinary := ""
 	if q.KustomizeOptions != nil {
 		kustomizeBinary = q.KustomizeOptions.BinaryPath
 	}
-	k := kustomize.NewKustomizeApp(appPath, q.Repo.GetGitCreds(credsStore), q.Repo.Repo, kustomizeBinary)
+	k := kustomize.NewKustomizeApp(repoRoot, appPath, q.Repo.GetGitCreds(credsStore), q.Repo.Repo, kustomizeBinary)
 	fakeManifestRequest := apiclient.ManifestRequest{
 		AppName:           q.AppName,
 		Namespace:         "", // FIXME: omit it for now
@@ -2356,7 +2357,7 @@ func (s *Service) newHelmClientResolveRevision(repo *v1alpha1.Repository, revisi
 		return helmClient, version.String(), nil
 	}
 
-	index, err := helmClient.GetIndex(noRevisionCache)
+	index, err := helmClient.GetIndex(noRevisionCache, s.initConstants.HelmRegistryMaxIndexSize)
 	if err != nil {
 		return nil, "", err
 	}
@@ -2434,7 +2435,7 @@ func checkoutRevision(gitClient git.Client, revision string, submoduleEnabled bo
 }
 
 func (s *Service) GetHelmCharts(ctx context.Context, q *apiclient.HelmChartsRequest) (*apiclient.HelmChartsResponse, error) {
-	index, err := s.newHelmClient(q.Repo.Repo, q.Repo.GetHelmCreds(), q.Repo.EnableOCI, q.Repo.Proxy, helm.WithChartPaths(s.chartPaths)).GetIndex(true)
+	index, err := s.newHelmClient(q.Repo.Repo, q.Repo.GetHelmCreds(), q.Repo.EnableOCI, q.Repo.Proxy, helm.WithChartPaths(s.chartPaths)).GetIndex(true, s.initConstants.HelmRegistryMaxIndexSize)
 	if err != nil {
 		return nil, err
 	}
@@ -2469,7 +2470,7 @@ func (s *Service) TestRepository(ctx context.Context, q *apiclient.TestRepositor
 				_, err := helm.NewClient(repo.Repo, repo.GetHelmCreds(), repo.EnableOCI, repo.Proxy).TestHelmOCI()
 				return err
 			} else {
-				_, err := helm.NewClient(repo.Repo, repo.GetHelmCreds(), repo.EnableOCI, repo.Proxy).GetIndex(false)
+				_, err := helm.NewClient(repo.Repo, repo.GetHelmCreds(), repo.EnableOCI, repo.Proxy).GetIndex(false, s.initConstants.HelmRegistryMaxIndexSize)
 				return err
 			}
 		},
