@@ -975,6 +975,25 @@
             "type": "string",
             "name": "project",
             "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "int64"
+            },
+            "collectionFormat": "multi",
+            "name": "sourcePositions",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "name": "revisions",
+            "in": "query"
           }
         ],
         "responses": {
@@ -4219,6 +4238,19 @@
         "revision": {
           "type": "string"
         },
+        "revisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourcePositions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        },
         "strategy": {
           "$ref": "#/definitions/v1alpha1SyncStrategy"
         },
@@ -5664,6 +5696,10 @@
           "type": "string",
           "title": "ClusterName contains AWS cluster name"
         },
+        "profile": {
+          "description": "Profile contains optional role ARN. If set then AWS IAM Authenticator uses the profile to perform cluster operations instead of the default AWS credential provider chain.",
+          "type": "string"
+        },
         "roleARN": {
           "description": "RoleARN contains optional role ARN. If set then AWS IAM Authenticator assume a role to perform cluster operations instead of the default AWS credential provider chain.",
           "type": "string"
@@ -6419,6 +6455,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "labelWithoutSelector": {
+          "type": "boolean",
+          "title": "LabelWithoutSelector specifies whether to apply common labels to resource selectors or not"
         },
         "namePrefix": {
           "type": "string",
@@ -8499,6 +8539,9 @@
           "type": "integer",
           "format": "int64",
           "title": "ID is an auto incrementing identifier of the RevisionHistory"
+        },
+        "initiatedBy": {
+          "$ref": "#/definitions/v1alpha1OperationInitiator"
         },
         "revision": {
           "type": "string",

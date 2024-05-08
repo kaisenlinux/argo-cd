@@ -184,6 +184,9 @@ func (k *kustomize) Build(opts *v1alpha1.ApplicationSourceKustomize, kustomizeOp
 			if opts.ForceCommonLabels {
 				args = append(args, "--force")
 			}
+			if opts.LabelWithoutSelector {
+				args = append(args, "--without-selector")
+			}
 			commonLabels := map[string]string{}
 			for name, value := range opts.CommonLabels {
 				commonLabels[name] = envVars.Envsubst(value)
@@ -319,7 +322,7 @@ func (k *kustomize) Build(opts *v1alpha1.ApplicationSourceKustomize, kustomizeOp
 }
 
 func parseKustomizeBuildOptions(path, buildOptions string) []string {
-	return append([]string{"build", path}, strings.Split(buildOptions, " ")...)
+	return append([]string{"build", path}, strings.Fields(buildOptions)...)
 }
 
 var KustomizationNames = []string{"kustomization.yaml", "kustomization.yml", "Kustomization"}
