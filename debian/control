@@ -5,14 +5,14 @@ Maintainer: Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>
 Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13), golang-go (>= 1.21), dh-golang
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 Homepage: https://github.com/argoproj/argo-cd
 Vcs-Browser: https://gitlab.com/kaisenlinux/packages/argo-cd
 Vcs-Git: https://gitlab.com/kaisenlinux/packages/argo-cd.git
 XS-Go-Import-Path: github.com/argoproj/argo-cd
 
 Package: argo-cd
-Architecture: amd64 arm64 i386
+Architecture: amd64 arm64
 Multi-Arch: foreign
 Depends:
  ${shlibs:Depends},
