@@ -1,3 +1,10 @@
+argo-cd (2.13.0-1kaisen) kaisen-packages; urgency=medium
+
+  * Import the 2.13.0 release
+  * Bump the golang version required to build
+
+ -- Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>  Tue, 19 Nov 2024 14:48:12 +0200
+
 argo-cd (2.12.1-1kaisen) kaisen-packages; urgency=medium
 
   * Import the 2.12.1 release
