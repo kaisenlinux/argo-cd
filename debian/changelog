@@ -1,3 +1,9 @@
+argo-cd (2.13.3-1kaisen) kaisen-packages; urgency=medium
+
+  * Import the 2.13.3 release
+
+ -- Kevin Chevreuil - Kaisen <kaisen@kaisenlinux.org>  Wed, 15 Jan 2025 15:48:08 +0200
+
 argo-cd (2.13.0-1kaisen) kaisen-packages; urgency=medium
 
   * Import the 2.13.0 release
